@@ -1,0 +1,14 @@
+{
+	"authorizationUrl":"https://www.facebook.com/v2.8/dialog/oauth",
+	"accessTokenUrl":"https://graph.facebook.com/v2.8/oauth/access_token",
+	"clientId":"211152179340666",
+	"clientSecret":"85cd7adc151241e8bdccdb31f09787cf",
+	"authType" : "OAuth2",
+	"scope":[ "user_posts" ],
+	"statusAcceptNotification":200,
+	"accessTokenMethod": "get",
+	"parameters": {
+		"endpoint" : "https://graph.facebook.com"
+	}
+}
+

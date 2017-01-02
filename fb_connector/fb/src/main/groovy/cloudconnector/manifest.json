@@ -1,0 +1,29 @@
+{
+  "fields": [
+    {
+      "name": "data",
+      "children": [
+        {
+          "name": "message",
+          "type": "CUSTOM",
+          "valueClass": "STRING"
+        },
+        {
+          "name": "id",
+          "type": "CUSTOM",
+          "valueClass": "STRING"
+        }
+      ]
+    }
+  ],
+  "messageFormat": "json",
+  "actions": [
+    {
+      "name": "getData",
+      "description": "get command from the wall",
+      "parameters": [],
+      "isStandard": false,
+      "type": "CUSTOM"
+    }
+  ]
+}
