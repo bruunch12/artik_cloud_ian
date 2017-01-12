@@ -1,0 +1,16 @@
+*.off
+.metadata
+.DS_Store
+bin/
+target/
+build/
+etc/
+gh-pages/
+.gradle
+
+.classpath
+.project
+.settings
+.pem
+.jks
+.pkcs12
