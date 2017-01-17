@@ -70,23 +70,6 @@ class MyCloudConnector extends CloudConnector {
 		}
 	}
 
-	def denull(obj) {
-		if(obj instanceof java.util.Map) {
-			obj.collectEntries {k, v ->
-				(v != null)? [(k): denull(v)] : [:]
-			}
-		} else if(obj instanceof java.util.Collection) {
-			obj.collect { denull(it) }.findAll { it != null }
-		} else {
-			obj
-		}
-	}
-
-	def long retrieveTimestampFromRequest(RequestDef req, jsData) {
-		def ts = jsData.current_observation.local_epoch as long
-		return ts * 1000
-	}
-
 	@Override
 	Or<List<Event>, Failure> onFetchResponse(Context ctx, RequestDef req, DeviceInfo info, Response res) {
 		switch (res.status) {
@@ -94,19 +77,17 @@ class MyCloudConnector extends CloudConnector {
 				def content = res.content.trim()
 				if (content == "") {
 					ctx.debug("ignore response valid respond: '${res.content}'")
-					return new Good(Empty.list())
+						return new Good(Empty.list())
 				}
 				else if (res.contentType.startsWith("application/json")) {
 					def json = slurper.parseText(content)
-					def ts = retrieveTimestampFromRequest(req, json)
-					def events = json.current_observation.collect { jsData ->
-						def js = denull(jsData)
-
-						new Event(ts, JsonOutput.toJson(js))
-					}
+					def ts = (json.current_observation.local_epoch as long) * 1000
+					def hum = JsonOutput.toJson(json.current_observation.relative_humidity)
+					hum = hum-'%'
+					def events = [new Event(ts, "{\"temp_c\":" + JsonOutput.toJson(json.current_observation.temp_c) + "}")] + [new Event(ts, "{\"relative_humidity\":" + hum + "}")]
 					return new Good(events)
-				 }
-				 return new Bad(new Failure("unsupported response ${res} ... ${res.contentType} .. ${res.contentType.startsWith("application/json")}"))
+				}
+				return new Bad(new Failure("unsupported response ${res} ... ${res.contentType} .. ${res.contentType.startsWith("application/json")}"))
 			default:
 				return new Bad(new Failure("http status : ${res.status} is not OK (${HTTP_OK})"))
 				

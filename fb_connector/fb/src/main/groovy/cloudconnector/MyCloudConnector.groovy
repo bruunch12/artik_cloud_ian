@@ -90,10 +90,20 @@ class MyCloudConnector extends CloudConnector {
 				}
 				else if (res.contentType.startsWith("application/json")) {
 					def json = slurper.parseText(content)
+				//	print("\n======json========\n"+json+"\n==================\n")
+				//	print("\n=======jsontype=====\n"+json.getClass()+"\n================\n")
+				//	print("\n=======json.dataType=====\n"+json.data.getClass()+"\n================\n")
+				//	print("\n=======json.data.collectType=====\n"+json.data.collect.getClass()+"\n================\n")
+
+				//	print("\n=======json.data.collect =====\n"+json.data.collect+"\n================\n")
+				//	print("\n=======json.collectManyType =====\n"+json.collectMany.getClass()+"\n================\n")
 					def events = json.data.collect { jsData ->
 						def js = denull(jsData)
+				//		print("\n=======jsData=========\n"+jsData+"\n==================\n")
+				//		print("\n=======jsDatatype=====\n"+jsData.getClass()+"\n================\n")
 						new Event(retrieveTimestampFromRequest(req, js), JsonOutput.toJson(js))
 					}
+				//	print("\n========eventType======\n"+events.getClass()+"\n===================\n")
 					return new Good(events)
 				 }
 				 return new Bad(new Failure("unsupported response ${res} ... ${res.contentType} .. ${res.contentType.startsWith("application/json")}"))
